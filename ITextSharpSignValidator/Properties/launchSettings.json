@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "ITextSharpSignValidator": {
+      "commandName": "Project",
+      "commandLineArgs": "\"D:\\ITextSharpSignValidator\\Справка за предоставени услуги.pdf\""
+    }
+  }
+}

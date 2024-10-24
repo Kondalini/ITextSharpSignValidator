@@ -1,0 +1,25 @@
+òdefVar --name inputFileDir --type String
+defVar --name CSharpCodeDir --type String
+defVar --name sPathExeFile --type String
+defVar --name PsathFiles --type List --innertype String
+defVar --name sFile --type String
+defVar --name sPathProcessNowFile --type String
+defVar --name inputPdfPath --type String
+defVar --name exitCode --type Numeric
+defVar --name output --type String
+defVar --name error --type String
+setVar --name "${inputFileDir}" --value "D:\\ITextSharpSignValidator"
+setVar --name "${CSharpCodeDir}" --value "D:\\ITextSharpSignValidator\\ITextSharpSignValidator\\ITextSharpSignValidator"
+setVar --name "${sPathExeFile}" --value "D:\\ITextSharpSignValidator\\ITextSharpSignValidator\\ITextSharpSignValidator\\bin\\Debug\\net6.0\\ITextSharpSignValidator.exe"
+getFiles --path "${inputFileDir}" --ignorecase  --reverseordering  PsathFiles=value
+foreach --collection "${PsathFiles}" --variable "${sFile}"
+	logMessage --message "Start processed file =>${sFile}" --type "Info"
+	fileRename --file "${sFile}" --newname ProcessNow sPathProcessNowFile=value
+	setVar --name "${inputPdfPath}" --value "${sPathProcessNowFile}"
+	//runWindowsScript --scripttype "BATScript" --source "Text" --script "@echo off\r\nd:\r\ncd \"${inputFileDir}\"\r\nif exist \"${inputPdfPath}\" (\r\n    start \"\" \"${sPathExeFile}\" \"${inputPdfPath}\"\r\n) else (\r\n    echo The specified PDF file does not exist: \"${inputPdfPath}\"\r\n)\r\n" --blockexecution  --comment "Output file is result" exitCode=exitcode output=output error=error
+	//runWindowsScript --scripttype "BATScript" --source "Text" --script "cd \"${CSharpCodeDir}\"\r\nset \"InputPdfPath=${InputPdfPath}\"\r\nset \"ExePath=${sPathExeFile}\"\r\nif exist \"%InputPdfPath%\" (\r\n        echo Running SignValSyncfusion.exe with input PDF path: \"%InputPdfPath%\"\r\n  \"%ExePath%\" \"%InputPdfPath%\"\r\n   ) else (\r\n    echo The specified PDF file does not exist: \"%InputPdfPath%\"\r\n)\r\n\r\n\r\n" --blockexecution  --comment "Output is available" exitCode=exitcode output=output error=error
+	runWindowsScript --scripttype "BATScript" --source "Text" --script "@echo off\r\nd:\r\ncd \"${inputFileDir}\"\r\n   start \"\" \"${sPathExeFile}\" ${inputPdfPath}\" \r\n\r\n   \r\n\r\n" --blockexecution  --comment "Output file only  is available" exitCode=exitcode output=output error=error
+	logMessage --message "${output}" --type "Info"
+	logMessage --message "End process file => ${sFile}" --type "Info"
+	fileRename --file "${sPathProcessNowFile}" --newname "${sFile}"
+endFor*	23.0.16.0
